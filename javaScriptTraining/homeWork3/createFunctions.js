@@ -1,8 +1,12 @@
 function createFunctions(n) {
-    var callbacks = [];
-
+    var callbacks = [],
+        expression = function (i) {
+            return function () {
+                return i;
+            };
+        };
     for (var i = 0; i < n; i++) {
-        callbacks.push(getVal(i));
+        callbacks.push(expression(i));
     }
 
     return callbacks;
