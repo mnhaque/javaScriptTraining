@@ -1,8 +1,10 @@
 function getMiddle(s) {
-    var middle = s.length / 2;
+    var middle = s.length / 2,
+        middleSubString;
     if (!(s.length % 2)) {
-        return s.substr(middle - 1, 2);
+        middleSubString = s.substr(middle - 1, 2);
     } else {
-        return s.substr(Math.ceil(middle) - 1, 1);
+        middleSubString = s.substr(Math.ceil(middle) - 1, 1);
     }
+    return middleSubString;
 }
