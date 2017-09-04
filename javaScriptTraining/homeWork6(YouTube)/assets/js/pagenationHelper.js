@@ -19,9 +19,8 @@ var pagenationHelper = (function () {
         this.currentPage = pageNumber;
     }
 
-    pagenationHelper.prototype.getStartIndexForPage = function (numberOfCards) {
-        var currentPage = this.getCurrentPage();
-        return (currentPage * numberOfCards) - numberOfCards
+    pagenationHelper.prototype.getStartIndex = function (noOfVideos) {
+        return (this.getCurrentPage() * noOfVideos) - noOfVideos
     }
     return pagenationHelper;
 })();

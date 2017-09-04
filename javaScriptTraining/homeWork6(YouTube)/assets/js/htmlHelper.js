@@ -7,10 +7,10 @@ var htmlHelper = (function () {
         var _this = this,
             $searchBox = document.querySelector('#youtubesearch');
         $searchBox.addEventListener('keyup', function (event) {
+            pagenationHelper.setCurrentPage(1);
             event.preventDefault();
             if (event.keyCode == 13) {
-                var searchText = $searchBox.value;
-                apiHandler.searchForVideos(searchText).then(function (videos) {
+                apiHandler.searchForVideos($searchBox.value).then(function (videos) {
                     _this.renderGrid(videos);
                     _this.renderPagenation(videos);
                     window.addEventListener('resize', function () {
@@ -22,17 +22,23 @@ var htmlHelper = (function () {
     }
 
     htmlHelper.prototype.renderPagenation = function (items) {
-        var _this = this;
-        _this.renderPageNumbers(pagenationHelper.getPageCount(items));
-        _this.addPageClickEventListener();
+        this.renderPageNumbers(pagenationHelper.getPageCount(items));
     }
 
     htmlHelper.prototype.clearGrid = function () {
-        var $allVideos = document.querySelector('#youtube-container');
-        if ($allVideos) {
+        this.clearHtmlContainer('#youtube-container');
+    }
+
+    htmlHelper.prototype.clearPagination = function () {
+        this.clearHtmlContainer('#pagination .pagination-controls');
+    }
+
+    htmlHelper.prototype.clearHtmlContainer = function (selector) {
+        var $node = document.querySelector(selector);
+        if ($node) {
             var $last;
-            while ($last = $allVideos.lastChild) {
-                $allVideos.removeChild($last);
+            while ($last = $node.lastChild) {
+                $node.removeChild($last);
             }
         }
     }
@@ -49,6 +55,7 @@ var htmlHelper = (function () {
             $paginationFragment.appendChild($anchor);
         }
         _this.setSelectedPageCss();
+        _this.addPageClickEventListener();
     }
 
     htmlHelper.prototype.addPageClickEventListener = function () {
@@ -61,16 +68,6 @@ var htmlHelper = (function () {
                 _this.setSelectedPageCss();
             }
         });
-    }
-
-    htmlHelper.prototype.clearPagination = function () {
-        var $paginationElement = document.querySelector('#pagination .pagination-controls');
-        if ($paginationElement) {
-            var $last;
-            while ($last = $paginationElement.lastChild) {
-                $paginationElement.removeChild($last);
-            }
-        }
     }
 
     htmlHelper.prototype.setSelectedPageCss = function () {
@@ -94,9 +91,9 @@ var htmlHelper = (function () {
             $videoItem = document.createDocumentFragment(),
             $videosSection = document.querySelector('#youtube-container'),
             itemCount = apiHandler.getVideosPerPage(),
-            startIndex = pagenationHelper.getStartIndexForPage(itemCount),
+            startIndex = pagenationHelper.getStartIndex(itemCount),
             numberOfpages;
-        this.clearGrid();
+        _this.clearGrid();
         for (var i = startIndex; i < (startIndex + itemCount); i++) {
             if (videos[i]) {
                 var $node = this.getVideoItem(videos[i], i);
@@ -106,22 +103,18 @@ var htmlHelper = (function () {
         $videosSection.appendChild($videoItem);
         numberOfpages = pagenationHelper.getPageCount(videos);
         _this.renderPageNumbers(numberOfpages);
-        _this.addPageClickEventListener();
     }
 
     htmlHelper.prototype.getVideoItem = function (card, index) {
         var $template = document.importNode(document.querySelector('#video-container-tpl').content, true);
         $template.querySelector('.video-container').setAttribute('id', 'video_' + index);
+        $template.querySelector('img').setAttribute('src', card.snippet.thumbnails.medium.url)
 
-        var $imgElement = $template.querySelector('img');
-        $imgElement.setAttribute('src', card.snippet.thumbnails.medium.url);
-
-        var $title = $template.querySelector('.title');
         var $videoLink = document.createElement('a');
         $videoLink.setAttribute('href', 'https://www.youtube.com/watch?v=' + card.id.videoId);
         $videoLink.setAttribute('target', '_blank');
         $videoLink.appendChild(document.createTextNode(card.snippet.title));
-        $title.appendChild($videoLink);
+        $template.querySelector('.title').appendChild($videoLink);
 
         var $channelTitle = $template.querySelector('.channel-title');
         $channelTitle.appendChild(document.createTextNode(card.snippet.channelTitle));

@@ -38,13 +38,15 @@ var apiHandler = (function () {
     apiHandler.prototype.getVideos = function () {
         return this.searchResults || [];
     }
+
     apiHandler.prototype.getVideosPerPage = function () {
-        var videosPerPage = 1;
-        var videoWidth = 330;
+        var videosPerPage = 1,
+            videoWidth = 330;
         while ((videosPerPage * videoWidth) < window.innerWidth) {
             videosPerPage += 1;
         }
         return (videosPerPage > 1) ? videosPerPage - 1 : 1;
     }
+
     return apiHandler;
 })();
