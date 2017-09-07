@@ -41,8 +41,7 @@ var ApiHandler = (function () {
     }
 
     ApiHandler.prototype.getVideosPerPage = function () {
-        var videosPerPage = config.MIN_VIDEOS_PER_PAGE;
-        videosPerPage = Math.floor(window.innerWidth / config.VIDEO_WIDTH);
+        var videosPerPage = Math.floor(window.innerWidth / config.VIDEO_WIDTH);
         return (videosPerPage > 1) ? videosPerPage : 1;
     }
 

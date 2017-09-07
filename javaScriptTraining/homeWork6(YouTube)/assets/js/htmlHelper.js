@@ -1,7 +1,7 @@
 var HtmlHelper = (function () {
     'use strict';
 
-    function HtmlHelper() {};
+    function HtmlHelper() {}
     ApiHandler = new ApiHandler();
     PagenationHelper = new PagenationHelper();
 
@@ -100,7 +100,7 @@ var HtmlHelper = (function () {
     HtmlHelper.prototype.renderGrid = function (videos) {
         var _this = this,
             $videoItem = document.createDocumentFragment(),
-            $videosSection = document.createElement('div'), //querySelector('#youtube-container'),
+            $videosSection = document.createElement('div'),
             itemCount = ApiHandler.getVideosPerPage(),
             startIndex = PagenationHelper.getStartIndex(itemCount),
             numberOfpages;
