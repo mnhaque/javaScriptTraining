@@ -84,7 +84,7 @@ var HtmlHelper = (function () {
     }
 
     function paginationClick(event) {
-        if (event.target.tagName.toLocaleLowerCase() === 'a') {
+        if (event.target.tagName.toLowerCase() === 'a') {
             pagenationHelper.setCurrentPage(event.target.text);
             HtmlHelper.prototype.renderGrid(apiHandler.getVideos());
             HtmlHelper.prototype.setSelectedPageCss();
