@@ -1,14 +1,15 @@
-var apiHandler = (function () {
+var ApiHandler = (function () {
     'use strict';
 
-    function apiHandler() {};
-    apiHandler.prototype.searchForVideos = function (searchText) {
+    function ApiHandler() {};
+
+    ApiHandler.prototype.searchForVideos = function (searchText) {
         var _this = this,
             queryParams = {
-                key: 'AIzaSyAAZmiXXZeEmUNBUhIT497rQ23Uqn_fXTA',
-                part: "snippet",
-                type: 'video',
-                maxResults: 25,
+                key: config.ACCESS_TOKEN,
+                part: config.PART,
+                type: config.TYPE,
+                maxResults: config.MAX_RESULTS,
                 q: searchText
             };
         return fetch(this.getApiUrl(queryParams)).then(function (response) {
@@ -17,11 +18,11 @@ var apiHandler = (function () {
             _this.setVideos(responseJson['items']);
             return responseJson['items'];
         }).catch(function (error) {
-            //exception Handling
+            console.log('error in api call' + error);
         });
     }
 
-    apiHandler.prototype.getApiUrl = function (queryParams) {
+    ApiHandler.prototype.getApiUrl = function (queryParams) {
         var encodedString = '';
         for (var prop in queryParams) {
             if (encodedString.length > 0) {
@@ -29,24 +30,21 @@ var apiHandler = (function () {
             }
             encodedString += encodeURI(prop + '=' + queryParams[prop]);
         }
-        return 'https://www.googleapis.com/youtube/v3/search?' + encodedString;
+        return config.API_URL + encodedString;
     }
-    apiHandler.prototype.setVideos = function (items) {
+    ApiHandler.prototype.setVideos = function (items) {
         this.searchResults = items;
     }
 
-    apiHandler.prototype.getVideos = function () {
+    ApiHandler.prototype.getVideos = function () {
         return this.searchResults || [];
     }
 
-    apiHandler.prototype.getVideosPerPage = function () {
-        var videosPerPage = 1,
-            videoWidth = 330;
-        while ((videosPerPage * videoWidth) < window.innerWidth) {
-            videosPerPage += 1;
-        }
-        return (videosPerPage > 1) ? videosPerPage - 1 : 1;
+    ApiHandler.prototype.getVideosPerPage = function () {
+        var videosPerPage = config.MIN_VIDEOS_PER_PAGE;
+        videosPerPage = Math.floor(window.innerWidth / config.VIDEO_WIDTH);
+        return (videosPerPage > 1) ? videosPerPage : 1;
     }
 
-    return apiHandler;
+    return ApiHandler;
 })();

@@ -1,26 +1,26 @@
-var pagenationHelper = (function () {
+var PagenationHelper = (function () {
     'use strict';
 
-    function pagenationHelper() {};
+    function PagenationHelper() {};
 
-    pagenationHelper.prototype.getPageCount = function (items) {
-        var videosPerPage = apiHandler.getVideosPerPage(),
+    PagenationHelper.prototype.getPageCount = function (items) {
+        var videosPerPage = ApiHandler.getVideosPerPage(),
             totalVideos = items.length,
             pageCount = Math.floor(totalVideos / videosPerPage);
         pageCount = pageCount + (totalVideos % videosPerPage === 0 ? 0 : 1);
         return pageCount;
     }
 
-    pagenationHelper.prototype.getCurrentPage = function () {
+    PagenationHelper.prototype.getCurrentPage = function () {
         return this.currentPage || 1;
     }
 
-    pagenationHelper.prototype.setCurrentPage = function (pageNumber) {
+    PagenationHelper.prototype.setCurrentPage = function (pageNumber) {
         this.currentPage = pageNumber;
     }
 
-    pagenationHelper.prototype.getStartIndex = function (noOfVideos) {
+    PagenationHelper.prototype.getStartIndex = function (noOfVideos) {
         return (this.getCurrentPage() * noOfVideos) - noOfVideos
     }
-    return pagenationHelper;
+    return PagenationHelper;
 })();

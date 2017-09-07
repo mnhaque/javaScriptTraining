@@ -1,9 +1,9 @@
 (function () {
+    'use strict';
+
     function start() {
-        apiHandler = new apiHandler();
-        pagenationHelper = new pagenationHelper();
-        htmlHelper = new htmlHelper();
-        htmlHelper.iniTializeSearchPage();
+        HtmlHelper = new HtmlHelper();
+        HtmlHelper.initializePage();
     }
     start();
 })();
