@@ -1,7 +1,7 @@
 var ApiHandler = (function () {
     'use strict';
 
-    function ApiHandler() {};
+    function ApiHandler() {}
 
     ApiHandler.prototype.searchForVideos = function (searchText) {
         var _this = this,

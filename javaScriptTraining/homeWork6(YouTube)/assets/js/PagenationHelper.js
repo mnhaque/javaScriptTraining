@@ -3,8 +3,8 @@ var PagenationHelper = (function () {
 
     function PagenationHelper() {};
 
-    PagenationHelper.prototype.getPageCount = function (items) {
-        var videosPerPage = ApiHandler.getVideosPerPage(),
+    PagenationHelper.prototype.getPageCount = function (items, apiHandler) {
+        var videosPerPage = apiHandler.getVideosPerPage(),
             totalVideos = items.length,
             pageCount = Math.floor(totalVideos / videosPerPage);
         pageCount = pageCount + (totalVideos % videosPerPage === 0 ? 0 : 1);

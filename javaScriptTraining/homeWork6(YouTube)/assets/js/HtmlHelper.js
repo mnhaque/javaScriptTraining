@@ -2,8 +2,8 @@ var HtmlHelper = (function () {
     'use strict';
 
     function HtmlHelper() {}
-    ApiHandler = new ApiHandler();
-    PagenationHelper = new PagenationHelper();
+    var apiHandler = new ApiHandler(),
+        pagenationHelper = new PagenationHelper();
 
     HtmlHelper.prototype.initializePage = function () {
         var _this = this,
@@ -16,23 +16,27 @@ var HtmlHelper = (function () {
         $searchBox.addEventListener('keyup', function (event) {
             event.preventDefault();
             if (event.keyCode === 13) {
-                ApiHandler.searchForVideos($searchBox.value).then(function (videos) {
-                    PagenationHelper.setCurrentPage(1);
+                apiHandler.searchForVideos($searchBox.value).then(function (videos) {
+                    pagenationHelper.setCurrentPage(1);
                     _this.renderGrid(videos);
                     _this.renderPagenation(videos);
-                    window.addEventListener('resize', function () {
-                        _this.renderGrid(videos);
-                        _this.renderPagenation(videos)
-                    });
+
                 });
             }
         });
         $search.appendChild($searchBox);
         document.body.appendChild($search);
+        window.addEventListener('resize', function () {
+            var videos = apiHandler.getVideos();
+            if (videos && videos.length > 0) {
+                _this.renderGrid(videos);
+                _this.renderPagenation(videos)
+            }
+        });
     }
 
     HtmlHelper.prototype.renderPagenation = function (items) {
-        this.renderPageNumbers(PagenationHelper.getPageCount(items));
+        this.renderPageNumbers(pagenationHelper.getPageCount(items, apiHandler));
     }
 
     HtmlHelper.prototype.clearGrid = function () {
@@ -40,6 +44,10 @@ var HtmlHelper = (function () {
     }
 
     HtmlHelper.prototype.clearPagination = function () {
+        var $node = document.querySelector('#pagination');
+        if ($node) {
+            $node.removeEventListener('click', paginationClick);
+        }
         this.clearHtmlContainer('#pagination');
     }
 
@@ -70,24 +78,26 @@ var HtmlHelper = (function () {
     }
 
     HtmlHelper.prototype.addPageClickEventListener = function () {
-        var $paginationControlsElement = document.querySelector('#pagination'),
-            _this = this;
-        $paginationControlsElement.addEventListener('click', function (event) {
-            if (event.target.tagName.toLocaleLowerCase() === 'a') {
-                PagenationHelper.setCurrentPage(event.target.text);
-                _this.renderGrid(ApiHandler.getVideos());
-                _this.setSelectedPageCss();
-            }
-        });
+        var _this = this,
+            $paginationControlsElement = document.querySelector('#pagination');
+        $paginationControlsElement.addEventListener('click', paginationClick);
+    }
+
+    function paginationClick(event) {
+        if (event.target.tagName.toLocaleLowerCase() === 'a') {
+            pagenationHelper.setCurrentPage(event.target.text);
+            HtmlHelper.prototype.renderGrid(apiHandler.getVideos());
+            HtmlHelper.prototype.setSelectedPageCss();
+        }
     }
 
     HtmlHelper.prototype.setSelectedPageCss = function () {
         var $paginationElement = document.querySelector('#pagination'),
-            currentPage = PagenationHelper.getCurrentPage(),
+            currentPage = pagenationHelper.getCurrentPage(),
             $selectedPagination = $paginationElement.querySelector('#page' + currentPage);
         if (!$selectedPagination) {
             currentPage = 1;
-            PagenationHelper.setCurrentPage(currentPage);
+            pagenationHelper.setCurrentPage(currentPage);
             $selectedPagination = $paginationElement.querySelector('#page' + currentPage);
         }
         var $previousActivePage = $paginationElement.querySelector('.active');
@@ -99,22 +109,21 @@ var HtmlHelper = (function () {
 
     HtmlHelper.prototype.renderGrid = function (videos) {
         var _this = this,
-            $videoItem = document.createDocumentFragment(),
             $videosSection = document.createElement('div'),
-            itemCount = ApiHandler.getVideosPerPage(),
-            startIndex = PagenationHelper.getStartIndex(itemCount),
+            itemCount = apiHandler.getVideosPerPage(),
+            startIndex = itemCount + pagenationHelper.getStartIndex(itemCount),
+            range = startIndex + itemCount,
             numberOfpages;
         $videosSection.setAttribute('id', 'youtube-container');
         _this.clearGrid();
-        for (var i = startIndex; i < (startIndex + itemCount); i++) {
+        for (var i = startIndex; i < range; i++) {
             if (videos[i]) {
                 var $node = this.getVideoItem(videos[i], i);
-                $videoItem.appendChild($node);
+                $videosSection.appendChild($node);
             }
         }
-        $videosSection.appendChild($videoItem);
         document.body.appendChild($videosSection);
-        numberOfpages = PagenationHelper.getPageCount(videos);
+        numberOfpages = pagenationHelper.getPageCount(videos, apiHandler);
         _this.renderPageNumbers(numberOfpages);
     }
 

@@ -2,8 +2,8 @@
     'use strict';
 
     function start() {
-        HtmlHelper = new HtmlHelper();
-        HtmlHelper.initializePage();
+        var htmlHelper = new HtmlHelper();
+        htmlHelper.initializePage();
     }
     start();
 })();
