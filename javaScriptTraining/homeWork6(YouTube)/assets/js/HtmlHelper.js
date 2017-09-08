@@ -28,7 +28,7 @@ var HtmlHelper = (function () {
         document.body.appendChild($search);
         window.addEventListener('resize', function () {
             var videos = apiHandler.getVideos();
-            if (videos && videos.length > 0) {
+            if (videos.length) {
                 _this.renderGrid(videos);
                 _this.renderPagenation(videos)
             }
@@ -62,10 +62,10 @@ var HtmlHelper = (function () {
         var _this = this,
             $paginationFragment = document.createElement('div');
         $paginationFragment.setAttribute('id', 'pagination');
-        $paginationFragment.setAttribute('class', 'pagination-controls');
+        $paginationFragment.setAttribute('class', 'pagination-controls'), $anchor;
         _this.clearPagination();
         for (var i = 0; i < numberOfpages; i++) {
-            var $anchor = document.createElement('a');
+            $anchor = document.createElement('a');
             $anchor.appendChild(document.createTextNode(i + 1));
             $anchor.setAttribute('id', 'page' + (i + 1));
             $anchor.setAttribute('href', '#');
@@ -94,13 +94,14 @@ var HtmlHelper = (function () {
     HtmlHelper.prototype.setSelectedPageCss = function () {
         var $paginationElement = document.querySelector('#pagination'),
             currentPage = pagenationHelper.getCurrentPage(),
-            $selectedPagination = $paginationElement.querySelector('#page' + currentPage);
+            $selectedPagination = $paginationElement.querySelector('#page' + currentPage),
+            $previousActivePage;
         if (!$selectedPagination) {
             currentPage = 1;
             pagenationHelper.setCurrentPage(currentPage);
             $selectedPagination = $paginationElement.querySelector('#page' + currentPage);
         }
-        var $previousActivePage = $paginationElement.querySelector('.active');
+        $previousActivePage = $paginationElement.querySelector('.active');
         if ($previousActivePage) {
             $previousActivePage.classList.remove('active');
         }
@@ -113,17 +114,17 @@ var HtmlHelper = (function () {
             itemCount = apiHandler.getVideosPerPage(),
             startIndex = itemCount + pagenationHelper.getStartIndex(itemCount),
             range = startIndex + itemCount,
-            numberOfpages;
+            numberOfpages, $node;
         $videosSection.setAttribute('id', 'youtube-container');
         _this.clearGrid();
         for (var i = startIndex; i < range; i++) {
             if (videos[i]) {
-                var $node = this.getVideoItem(videos[i], i);
+                $node = this.getVideoItem(videos[i], i);
                 $videosSection.appendChild($node);
             }
         }
         document.body.appendChild($videosSection);
-        numberOfpages = pagenationHelper.getPageCount(videos, apiHandler);
+        numberOfpages = pagenationHelper.getPageCount(videos, apiHandler.getVideosPerPage());
         _this.renderPageNumbers(numberOfpages);
     }
 

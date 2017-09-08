@@ -3,12 +3,9 @@ var PagenationHelper = (function () {
 
     function PagenationHelper() {};
 
-    PagenationHelper.prototype.getPageCount = function (items, apiHandler) {
-        var videosPerPage = apiHandler.getVideosPerPage(),
-            totalVideos = items.length,
-            pageCount = Math.floor(totalVideos / videosPerPage);
-        pageCount = pageCount + (totalVideos % videosPerPage === 0 ? 0 : 1);
-        return pageCount;
+    PagenationHelper.prototype.getPageCount = function (items, videosPerPage) {
+        var totalVideos = items.length;
+        return Math.floor(totalVideos / videosPerPage) + (totalVideos % videosPerPage === 0 ? 0 : 1);
     }
 
     PagenationHelper.prototype.getCurrentPage = function () {
