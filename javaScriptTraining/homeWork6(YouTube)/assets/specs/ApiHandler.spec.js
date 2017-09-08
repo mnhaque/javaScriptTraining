@@ -5,6 +5,6 @@ describe('ApiHandler', function () {
     });
     it('first', function () {
         apiHandler.setVideos([]);
-        expect(apiHandler.getVideos().length, 0);
+        expect(apiHandler.getVideos().length).toBe(0);
     })
 })

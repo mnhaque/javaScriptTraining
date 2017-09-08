@@ -1,20 +1,19 @@
 {
-    "name": "youtube",
-    "version": "1.0.0",
-    "description": "youtube",
-    "main": "index.js",
-    "scripts": {
-        "test": "echo \"Error: no test specified\" && exit 1"
-    },
-    "author": "Nasim",
-    "license": "ISC",
-    "devDependencies": {
-        "karma": "^1.7.1",
-        "karma-jasmine": "^1.1.0",
-        "jasmine-core": "^2.8.0",
-        "karma-phantomjs2-launcher": "^0.5.0"
-    },
-    "dependencies": {
-
-    }
+  "name": "youtube",
+  "version": "1.0.0",
+  "description": "youtube",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Nasim",
+  "license": "ISC",
+  "devDependencies": {
+    "jasmine-core": "^2.8.0",
+    "karma": "^1.7.1",
+    "karma-chrome-launcher": "^2.2.0",
+    "karma-jasmine": "^1.1.0",
+    "karma-phantomjs2-launcher": "^0.5.0"
+  },
+  "dependencies": {}
 }
