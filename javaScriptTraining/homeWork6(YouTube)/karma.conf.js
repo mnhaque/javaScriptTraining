@@ -17,7 +17,7 @@ module.exports = function (config) {
         files: [
             "js/config.js",
             "js/ApiHandler.js",
-            "js/PagenationHelper.js",
+            "js/PaginationHelper.js",
             "js/HtmlHelper.js",
             "js/index.js",
             "specs/*.spec.js"],
